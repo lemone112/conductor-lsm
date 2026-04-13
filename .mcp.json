@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "conductor-lsm": {
+      "command": "node",
+      "args": ["./dist/index.js"]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "conductor-lsm",
+  "version": "1.0.0",
+  "description": "Living System Model — semantic memory for AI agents. Stores architectural decisions, failures, and context as searchable embeddings.",
+  "mcpServers": "../.mcp.json"
+}

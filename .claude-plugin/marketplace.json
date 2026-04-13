@@ -1,0 +1,24 @@
+{
+  "name": "conductor-lsm",
+  "displayName": "Conductor LSM",
+  "description": "Living System Model for the Conductor AI orchestration system. Provides lsm_search and lsm_write tools for semantic memory across sessions — stores decisions, failures, and architectural context as searchable embeddings via Cohere.",
+  "author": "lemone112",
+  "repository": "https://github.com/lemone112/conductor-lsm",
+  "tags": ["memory", "semantic-search", "ai-agents", "conductor"],
+  "requiredEnv": [
+    {
+      "name": "COHERE_API_KEY",
+      "description": "Cohere API key for embed-english-v3.0 embeddings"
+    }
+  ],
+  "optionalEnv": [
+    {
+      "name": "LSM_DATA_DIR",
+      "description": "Path to JSONL data directory. Default: ~/.claude/conductor-lsm/data"
+    },
+    {
+      "name": "HTTPS_PROXY",
+      "description": "HTTP proxy URL if required (e.g. http://127.0.0.1:12334)"
+    }
+  ]
+}

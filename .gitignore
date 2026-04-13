@@ -1,0 +1,5 @@
+# conductor-lsm
+node_modules/
+data/
+.env
+*.js.map
