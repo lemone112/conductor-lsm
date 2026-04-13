@@ -7,7 +7,9 @@ if (proxyUrl) {
   setGlobalDispatcher(new ProxyAgent(proxyUrl));
 }
 
-const cohere = new CohereClient({ token: process.env.COHERE_API_KEY });
+const apiKey = process.env.COHERE_API_KEY;
+if (!apiKey) throw new Error('COHERE_API_KEY environment variable is required');
+const cohere = new CohereClient({ token: apiKey });
 
 export async function embedQuery(text: string): Promise<number[]> {
   const response = await cohere.v2.embed({

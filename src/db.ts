@@ -16,7 +16,15 @@ export function readAll(): LsmEntry[] {
   ensureDir();
   if (!fs.existsSync(FILE_PATH)) return [];
   const lines = fs.readFileSync(FILE_PATH, 'utf-8').split('\n').filter(Boolean);
-  return lines.map(line => JSON.parse(line) as LsmEntry);
+  const entries: LsmEntry[] = [];
+  for (const line of lines) {
+    try {
+      entries.push(JSON.parse(line) as LsmEntry);
+    } catch {
+      // Skip malformed lines — partial write or manual edit should not crash search
+    }
+  }
+  return entries;
 }
 
 export function append(entry: LsmEntry): void {
@@ -25,6 +33,7 @@ export function append(entry: LsmEntry): void {
 }
 
 export function cosineSimilarity(a: number[], b: number[]): number {
+  if (a.length !== b.length) throw new Error(`Embedding dimension mismatch: ${a.length} vs ${b.length}`);
   let dot = 0, normA = 0, normB = 0;
   for (let i = 0; i < a.length; i++) {
     dot += a[i] * b[i];
