@@ -32,6 +32,21 @@ export function append(entry: LsmEntry): void {
   fs.appendFileSync(FILE_PATH, JSON.stringify(entry) + '\n', 'utf-8');
 }
 
+export function updateEntry(id: string, updated: LsmEntry): boolean {
+  const entries = readAll();
+  const idx = entries.findIndex(e => e.id === id);
+  if (idx === -1) return false;
+  entries[idx] = updated;
+  const tmp = FILE_PATH + '.tmp';
+  fs.writeFileSync(tmp, entries.map(e => JSON.stringify(e)).join('\n') + '\n', 'utf-8');
+  fs.renameSync(tmp, FILE_PATH);
+  return true;
+}
+
+export function findById(id: string): LsmEntry | undefined {
+  return readAll().find(e => e.id === id);
+}
+
 export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) throw new Error(`Embedding dimension mismatch: ${a.length} vs ${b.length}`);
   let dot = 0, normA = 0, normB = 0;

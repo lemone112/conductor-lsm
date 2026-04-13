@@ -4,6 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { search } from './search.js';
 import { write } from './write.js';
+import { update } from './update.js';
 const server = new Server({ name: 'conductor-lsm', version: '1.0.0' }, { capabilities: { tools: {} } });
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [
@@ -41,6 +42,22 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
                 required: ['category', 'title', 'body'],
             },
         },
+        {
+            name: 'lsm_update',
+            description: 'Update an existing LSM entry by ID. Re-embeds the entry if title, body, or why changes. Use when a past decision was wrong or incomplete.',
+            inputSchema: {
+                type: 'object',
+                properties: {
+                    id: { type: 'string', description: 'Entry ID (from lsm_search results)' },
+                    title: { type: 'string', description: 'Updated title' },
+                    body: { type: 'string', description: 'Updated body' },
+                    why: { type: 'string', description: 'Updated rationale' },
+                    tried_and_failed: { type: 'string', description: 'Updated tried_and_failed' },
+                    tags: { type: 'array', items: { type: 'string' }, description: 'Updated tags' },
+                },
+                required: ['id'],
+            },
+        },
     ],
 }));
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -55,6 +72,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         }
         if (name === 'lsm_write') {
             const result = await write(args);
+            return {
+                content: [{ type: 'text', text: JSON.stringify(result) }],
+            };
+        }
+        if (name === 'lsm_update') {
+            const result = await update(args);
             return {
                 content: [{ type: 'text', text: JSON.stringify(result) }],
             };
